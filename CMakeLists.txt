@@ -18,8 +18,7 @@
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,                                       *
 ## *   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx                                       *
 #-----------------------------------------------------------------------------
-# Frontend2 Author: Jon Gough Testplugin(TP)
-# v1.0.309.0 14/10/2024 DD/MM/YYYY
+# Frontend2 Author: Jon Gough Testplugin(TP) v1.0.326.0 18/01/2025 DD/MM/YYYY
 # buildCI:yes useODAPI:no validateJSON:no
 # ---------------------------------------------------------------------------
 ## -- When changing this file do NOT change the order of the sections.    -- ##
@@ -100,8 +99,7 @@ option(PLUGIN_USE_SVG "Use SVG graphics" ON)
 
 set(CMAKE_CXX_STANDARD 11)
 
-# Use local version of GLU library
-# requires libs/glu directory
+# Use local version of GLU library requires libs/glu directory
 set(USE_LOCAL_GLU TRUE)
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY") # not operational
@@ -194,7 +192,7 @@ set(SRC ${SRCS} ${HDRS})
 ## Modify/configure 'Include' Directories below for the Plugin
 ##=============================================================
 
-
+include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 
 ## Change target_sources to match your project needs.
 ##==============================================================
