@@ -122,21 +122,21 @@ int AutoTrackRaymarine_pi::Init(void)
     m_vessel_heading = nan("");
     m_pilot_seen = false;
     m_variation_seen = false;
+    m_PreferencesDialog = NULL;
+    m_info_dialog = NULL;
+    m_ErrorDialog = NULL;
     SetStandby();
 
     // Mode
     preferences& p = m_prefs;
     p.max_angle = pConf->Read("MaxAngle", 30);
     p.sensitivity = pConf->Read("Sensitivity", 100);
-    //ShowErrorDialog();
     ShowInfoDialog();
     m_XTE_refreshed = false;
     m_route_active = false;
     m_pilot_heading = -1.; // undefined, heading to steer of pilot, true degrees
     m_vessel_heading = nan(""); // current heading of vessel according to pilot, undefined
     m_XTE = 100000.; // undefined
-
-    
 
     //    This PlugIn needs a toolbar icon
 
@@ -268,9 +268,6 @@ bool AutoTrackRaymarine_pi::DeInit(void)
     preferences& p = m_prefs;
     pConf->Write("MaxAngle", p.max_angle);
     pConf->Write("Sensitivity", p.sensitivity);
-
-    
-
     m_initialized = false;
     return true;
 }
@@ -402,13 +399,12 @@ void AutoTrackRaymarine_pi::ShowPreferencesDialog(wxWindow* parent)
 
 bool AutoTrackRaymarine_pi::RenderOverlay(wxDC& dc, PlugIn_ViewPort* vp)
 {
-    long now = wxGetUTCTime();
+    if (!m_initialized) {
+        return true;
+    }
     if (!m_variation_seen) {
         ShowErrorDialog();
         DisplayErrorText(_("No variation\n Activate WMM plugin"));
-    }
-    if (!m_initialized) {
-        return true;
     }
     if (m_info_dialog) {
         m_info_dialog->UpdateInfo();
@@ -428,15 +424,14 @@ void AutoTrackRaymarine_pi::DisplayErrorText(wxString xx)
 bool AutoTrackRaymarine_pi::RenderGLOverlay(
     wxGLContext* pcontext, PlugIn_ViewPort* vp)
 {    
+    if (!m_initialized) {
+        return true;
+    }
     if (!m_variation_seen) {
         ShowErrorDialog();
         DisplayErrorText(_("no variation\n Activate WMM plugin"));
     }
     
-    
-    if (!m_initialized) {
-        return true;
-		}
     if (m_info_dialog) {
         m_info_dialog->UpdateInfo();
     }
@@ -479,7 +474,7 @@ void AutoTrackRaymarine_pi::ShowErrorDialog()
 {
     if (!m_ErrorDialog) {
         m_ErrorDialog
-            = new ErrorDialog(GetOCPNCanvasWindow(), *this);
+            = new ErrorDialog(GetOCPNCanvasWindow(), this);
     }
     m_ErrorDialog->Show();
 }
