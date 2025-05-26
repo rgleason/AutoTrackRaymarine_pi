@@ -73,10 +73,9 @@ class PreferencesDialog;
 class InfoDialog;
 class ErrorDialog;
 
-#define WATCHDOG_TIMEOUT                                                       \
-    (10) // After 10s assume GPS and heading data is invalid
-#define NOT_TIMED_OUT(t, timeout) (!TIMED_OUT(t, timeout))
-#define TIMED_OUT(t, timeout) (t >= timeout)
+#ifndef PI
+#define PI (3.1415926535897931160E0)
+#endif
 
 class AutoTrackRaymarine_pi : public wxEvtHandler, public opencpn_plugin_118
 {

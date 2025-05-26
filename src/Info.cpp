@@ -136,7 +136,7 @@ void InfoDialog::OnTracking(wxCommandEvent& event) {
   }
   else if (m_pi->m_variation_seen && !m_pi->m_route_active){
       m_pi->ShowErrorDialog();
-      m_pi->DisplayErrorText(_("No route active"));
+      m_pi->DisplayErrorText(_("No active route"));
   }
 }
 

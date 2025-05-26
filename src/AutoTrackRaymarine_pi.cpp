@@ -277,7 +277,7 @@ void AutoTrackRaymarine_pi::HandleN2K_127250(ObservedEvt ev){
     NMEA2000Id id_127250(127250);
     std::vector<uint8_t> msg = GetN2000Payload(id_127250, ev);
     double p_h = ((unsigned int)msg[14] + 256 * (unsigned int)msg[15]) * 360.
-        / 3.141 / 20000;
+        / PI / 20000;
     m_vessel_heading = p_h + m_var;
     MOD_ANGLE(m_vessel_heading);
 }
@@ -291,7 +291,7 @@ void AutoTrackRaymarine_pi::HandleN2K_65360(ObservedEvt ev)
     if (m_pilot_state == STANDBY) {
         SetAuto();
     }
-    p_h = ((unsigned int)msg[18] + 256 * (unsigned int)msg[19]) * 360. / 3.141
+    p_h = ((unsigned int)msg[18] + 256 * (unsigned int)msg[19]) * 360. / PI
         / 20000;
     m_pilot_heading = p_h + m_var; // received heading is magnetic
     MOD_ANGLE(m_pilot_heading);
@@ -300,7 +300,7 @@ void AutoTrackRaymarine_pi::HandleN2K_65360(ObservedEvt ev)
 // case 126208: // if length is 28: command to set to standby or auto
 //  if length is 25: command to set to heading
 // heading = ((unsigned int)msg[12] + 256 * (unsigned int)msg[13]) * 360.
-// / 3.141 / 20000;
+// / PI / 20000;
 void AutoTrackRaymarine_pi::HandleN2K_126208(ObservedEvt ev)
 {
     NMEA2000Id id_126208(126208);
@@ -378,7 +378,7 @@ void AutoTrackRaymarine_pi::HandleN2K_65359(ObservedEvt ev)
     NMEA2000Id id_65359(65359);
     std::vector<uint8_t> msg = GetN2000Payload(id_65359, ev);
     m_vessel_heading = (((unsigned int)msg[18] + 256 * (unsigned int)msg[19])
-        * 360. / 3.141 / 20000) + m_var;
+        * 360. / PI / 20000) + m_var;
     MOD_ANGLE(m_vessel_heading);
     SetPilotSeen(true);
 }
@@ -684,7 +684,7 @@ void AutoTrackRaymarine_pi::Compute()
     double gamma,
         new_heading; // angle for correction of heading relative to BTW
     if (dist > 1.) {
-        gamma = atan(XTE_for_correction * 1852. / dist) / (2. * 3.1416) * 360.;
+        gamma = atan(XTE_for_correction * 1852. / dist) / (2. * PI) * 360.;
     }
     else {
         gamma = 0.;
