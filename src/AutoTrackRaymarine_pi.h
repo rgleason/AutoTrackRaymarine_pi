@@ -76,6 +76,7 @@ class ErrorDialog;
 #ifndef PI
 #define PI (3.1415926535897931160E0)
 #endif
+#define WPARRIVED 2;
 
 class AutoTrackRaymarine_pi : public wxEvtHandler, public opencpn_plugin_118
 {
@@ -173,12 +174,10 @@ public:
 #define AUTO 1
 #define TRACKING 2
 #define I_FACTOR 0.0075   // was 0.3, instable occillations
-#define D_FACTOR 5.
+#define D_FACTOR 2.   // was 5. 26-05-2025
 
 public:
-  void ResetXTE() {
-      m_XTE = 0.;  m_XTE_P = 0.;  m_XTE_I = 0.; m_XTE_D = 0.; m_heading_set = false;
-  }
+    void ResetXTE(); 
   
     // these are stored to the config
     struct preferences {
