@@ -69,8 +69,8 @@ set(SHORT_DESCRIPTION "Route following for Raymarine EV-1 Autopilots ")
 set(LONG_DESCRIPTION "Route tracking and remote control for Evolution pilots")
 
 set(VERSION_MAJOR "1")
-set(VERSION_MINOR "19")
-set(VERSION_PATCH "3")
+set(VERSION_MINOR "20")
+set(VERSION_PATCH "0")
 set(VERSION_TWEAK "0")
 set(VERSION_DATE  "05/06/2025")#DD/MM/YYYY format
 
