@@ -28,7 +28,7 @@
 
 #include "Info.h"
 #include "AutotrackInfoUI.h"
-
+#include "AutotrackRaymarine_pi.h"
 
 void InfoDialog::UpdateInfo() {
     if (m_pi->m_pilot_state == TRACKING)
@@ -38,7 +38,7 @@ void InfoDialog::UpdateInfo() {
     if (m_pi->m_pilot_state == STANDBY)
       TextStatus11->SetValue(_("Standby"));
     wxString pilot_heading;
-    if (m_pi->m_pilot_heading == -1.) {
+    if (m_pi->m_pilot_heading == -1. || isnan(m_pi->m_pilot_heading)) {
       pilot_heading = _("----");
     }
     else {
@@ -46,14 +46,18 @@ void InfoDialog::UpdateInfo() {
     }
     TextStatus14->SetValue(pilot_heading);
     wxString heading;
-    if (m_pi->m_vessel_heading == -1.) {
+    if (isnan(m_pi->m_vessel_heading)) {
       heading = _("----");
     }
     else if (isnan(m_pi->m_var)) {
         heading = _("no variation");
+        TextStatus12->SetForegroundColour(wxColour(255, 255, 255));
+        TextStatus12->SetBackgroundColour(wxColour(0, 0, 0));
     }
     else {
       heading << wxString::Format(wxString("%4.1f", wxConvUTF8), m_pi->m_vessel_heading);
+      TextStatus12->SetForegroundColour(wxColour(0, 0, 0));
+      TextStatus12->SetBackgroundColour(wxColour(255, 255, 255));
     }
     TextStatus12->SetValue(heading);
     wxString xte;
@@ -67,18 +71,27 @@ void InfoDialog::UpdateInfo() {
 }
 
 void InfoDialog::OnAuto(wxCommandEvent& event) {
+    if (!m_pi->m_pilot_seen) {
+        //wxLogMessage(wxT("Pilot not seen"));
+        m_pi->ShowErrorDialog();
+        m_pi->DisplayErrorText("Pilot not seen");
+    }
   m_pi->SetPilotAuto();   // sent auto command to pilot
   m_pi->SetAuto();
 }
 
 
 void InfoDialog::OnStandby(wxCommandEvent& event) {
+    if (!m_pi->m_pilot_seen) {
+        m_pi->ShowErrorDialog();
+        m_pi->DisplayErrorText("Pilot not seen");
+    }
   
   m_pi->SetPilotStandby();
   m_pi->SetStandby();
   
      /* std::shared_ptr <std::vector<uint8_t>> payload(new std::vector<uint8_t> ({ 1, 0xa9, 0x5d, 0xff, 0x7f, 0xff, 0x7f, 0xfd }));
-      wxLogMessage(wxT("$$$ payload , %0x, %0x, %0x"), payload->at(0), payload->at(1), payload->at(2));
+      wxLogMessage(wxT("payload , %0x, %0x, %0x"), payload->at(0), payload->at(1), payload->at(2));
   int PGN = 127250;
   WriteCommDriverN2K(m_pi->m_handleN2k, PGN,
       255, 6, payload);*/
@@ -100,7 +113,7 @@ void InfoDialog::EnableHeadingButtons(bool show) {
 }
 
 void InfoDialog::EnableTrackButton(bool enable) {
-  if (enable && m_pi->m_route_active) {
+  if (enable /*&& m_pi->m_route_active*/) {
     buttonTrack->Enable();
   }
   else {
@@ -110,11 +123,20 @@ void InfoDialog::EnableTrackButton(bool enable) {
 
 void InfoDialog::OnTracking(wxCommandEvent& event) {
   if (m_pi->m_route_active) {
+      if (!m_pi->m_pilot_seen) {
+          m_pi->ShowErrorDialog();
+          m_pi->DisplayErrorText(_("Pilot not seen"));
+      }
+
     if (m_pi->m_pilot_state == STANDBY) {
       m_pi->SetAuto();
       m_pi->SetPilotAuto();
     }
     m_pi->SetTracking();
+  }
+  else if (m_pi->m_variation_seen && !m_pi->m_route_active){
+      m_pi->ShowErrorDialog();
+      m_pi->DisplayErrorText(_("No active route"));
   }
 }
 

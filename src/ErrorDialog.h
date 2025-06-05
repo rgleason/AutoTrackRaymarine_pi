@@ -1,5 +1,3 @@
-
-
 /******************************************************************************
 *
 * Project:  OpenCPN
@@ -26,41 +24,27 @@
 ***************************************************************************
 */
 
-#ifndef INC_INFO_H
-#define INC_INFO_H
+#ifndef INC_ERRORDIALOG_H
+#define INC_ERRORDIALOG_H
 
 #include "AutoTrackRaymarine_pi.h"
-#include "AutotrackInfoUI.h"
+#include "AutoTrackErrorUI.h"
 
-#define MOD_ANGLE(angle) if (angle < 0.) angle += 360.; if (angle >= 360.) angle -= 360.;
-
-class InfoDialog : public m_dialog
+class ErrorDialog : public ErrorDialogBase
 {
 public:
-  InfoDialog(wxWindow *parent, AutoTrackRaymarine_pi *pi)
-    : m_dialog(parent), m_pi(pi) {
+  ErrorDialog(wxWindow* parent, AutoTrackRaymarine_pi *pi)
+    : ErrorDialogBase(parent), m_pi(*pi) {
+
   }
-  ~InfoDialog() {};
-  void UpdateInfo();
-  void OnAuto(wxCommandEvent & event);
-  void OnStandby(wxCommandEvent & event);
-  void OnTracking(wxCommandEvent & event);
-  void OnMinusTen(wxCommandEvent & event);
-  void OnPlusTen(wxCommandEvent & event);
-  void OnMinusOne(wxCommandEvent & event);
-  void OnPlusOne(wxCommandEvent & event);
-  void EnableHeadingButtons(bool enable);
-  void EnableTrackButton(bool enable);
+  ~ErrorDialog();
 
+  bool Show(bool show = true);
+  void DisplayText1(wxString xx);
 private:
-  /*void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);*/
-
-  AutoTrackRaymarine_pi *m_pi;
-
+  void OnOk(wxCommandEvent& event);
+  AutoTrackRaymarine_pi& m_pi;
 };
 
+#endif // !INC_ERRORDIALOG_H
 
-
-
-#endif
