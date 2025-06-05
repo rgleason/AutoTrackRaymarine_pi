@@ -3,7 +3,7 @@
  * Project:  OpenCPN
  * Purpose:  AutoTrackRaymarine plugin
  * Author:   Douwe Fokkema
- *          
+ *
  *
  ***************************************************************************
  *   Copyright (C) 2019 by Douwe Fokkema                                   *
@@ -25,39 +25,25 @@
  ***************************************************************************
  */
 
-#include "PreferencesDialog.h"
+#include "ErrorDialog.h"
 
-
-bool PreferencesDialog::Show( bool show )
-
+bool ErrorDialog::Show(bool show)
 {
-    if(show) {
-        // load preferences
-        AutoTrackRaymarine_pi::preferences &p = m_pi.m_prefs;
-        m_sMaxAngle1->SetValue(p.max_angle);
-        m_sensitivity->SetValue(p.sensitivity);
-    }
-    return PreferencesDialogBase::Show(show);
+  if (show) {
+  }
+  return ErrorDialogBase::Show(show);
 }
 
-
-void PreferencesDialog::OnCancel( wxCommandEvent& event )
-{
-    if(IsModal())
-        EndModal(wxID_CANCEL);
-    Hide();
+void ErrorDialog::DisplayText1(wxString xx) {
+    m_textCtrl3->SetValue(xx);
 }
 
-void PreferencesDialog::OnOk( wxCommandEvent& event )
+void ErrorDialog::OnOk(wxCommandEvent& event)
 {
-    AutoTrackRaymarine_pi::preferences &p = m_pi.m_prefs;
-    p.max_angle = m_sMaxAngle1->GetValue();
-    p.sensitivity = m_sensitivity->GetValue();
-    // Waypoint Arrival
-    Hide();
+  Hide();
 }
 
-PreferencesDialog::~PreferencesDialog() {
+ErrorDialog::~ErrorDialog() {
 };
 
 

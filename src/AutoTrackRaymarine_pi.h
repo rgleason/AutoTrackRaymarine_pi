@@ -71,6 +71,12 @@ class apDC;
 class ConsoleCanvas;
 class PreferencesDialog;
 class InfoDialog;
+class ErrorDialog;
+
+#ifndef PI
+#define PI (3.1415926535897931160E0)
+#endif
+#define WPARRIVED 2;
 
 class AutoTrackRaymarine_pi : public wxEvtHandler, public opencpn_plugin_118
 {
@@ -116,7 +122,11 @@ public:
   wxString GetCommonName();
   wxString GetShortDescription();
   wxString GetLongDescription();
-  wxBitmap m_panelBitmap;  
+  wxBitmap m_panelBitmap;
+  bool m_pilot_seen;
+  time_t m_pilot_seen_timeout;
+  bool m_variation_seen;
+  long m_var_timeout;
 
   void ShowPreferencesDialog(wxWindow* parent);
 
@@ -136,19 +146,25 @@ public:
   void SetPilotAuto();
   void SetPilotStandby();
   void SetP70Tracking();
+  void ShowErrorDialog();
+  void HideErrorDialog();
+  void SetPilotSeen(bool seen);
+  void SetRouteActivated(bool active);
+  void DisplayErrorText(wxString xx);
 
   static wxString StandardPath();
 
   PlugIn_Position_Fix_Ex &LastFix() { return m_lastfix; }
 
   DriverHandle m_N2khandle;
+  int m_wp_arrived;
   double m_XTE, m_BTW, m_DTW;
   bool m_XTE_refreshed;
   bool m_heading_set;
   double m_var;
   bool m_initialized;
   bool m_route_active;
-  double m_pilot_heading;  // target heading of pilot in auto mode
+  double m_pilot_heading;         // target heading of pilot in auto mode
   double m_vessel_heading;        // current heading of vessel according to pilot
   
   double m_XTE_P, m_XTE_I, m_XTE_D;   // proportional, integral and differential factors
@@ -158,12 +174,10 @@ public:
 #define AUTO 1
 #define TRACKING 2
 #define I_FACTOR 0.0075   // was 0.3, instable occillations
-#define D_FACTOR 5.
+#define D_FACTOR 2.   // was 5. 26-05-2025
 
 public:
-  void ResetXTE() {
-      m_XTE = 0.;  m_XTE_P = 0.;  m_XTE_I = 0.; m_XTE_D = 0.; m_heading_set = false;
-  }
+    void ResetXTE(); 
   
     // these are stored to the config
     struct preferences {
@@ -172,7 +186,9 @@ public:
     } m_prefs;
     
     PreferencesDialog *m_PreferencesDialog;
+    ErrorDialog* m_ErrorDialog;
     InfoDialog *m_info_dialog;
+    
     void OnToolbarToolCallback(int id);
 
     // Icons
@@ -184,8 +200,7 @@ public:
 protected:   
     wxPoint m_cursor_position;
     PlugIn_Position_Fix_Ex m_lastfix;
-    void OnTimer(wxTimerEvent &);
-    wxTimer m_Timer;
+   
 
 private:
     void SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix);
@@ -194,7 +209,6 @@ private:
     void Compute();
     void SendHSC(double course);
     int m_leftclick_tool_id;
-    double m_current_bearing;
 };
 
 #endif
