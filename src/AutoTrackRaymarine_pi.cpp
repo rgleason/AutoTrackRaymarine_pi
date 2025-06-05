@@ -264,6 +264,7 @@ bool AutoTrackRaymarine_pi::DeInit(void)
         pConf->Write("PosY", p.y);
     }
     delete m_info_dialog;
+    m_info_dialog = NULL;
 
     preferences& p = m_prefs;
     pConf->Write("MaxAngle", p.max_angle);
