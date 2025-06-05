@@ -28,7 +28,6 @@
 
 #include "Info.h"
 #include "AutotrackInfoUI.h"
-#include "AutotrackRaymarine_pi.h"
 
 void InfoDialog::UpdateInfo() {
     if (m_pi->m_pilot_state == TRACKING)
