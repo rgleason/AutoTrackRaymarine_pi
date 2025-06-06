@@ -251,6 +251,7 @@ bool AutoTrackRaymarine_pi::DeInit(void)
         return true;
     if (m_PreferencesDialog) {
         delete m_PreferencesDialog;
+        m_PreferencesDialog = NULL;
     }
     RemovePlugInTool(m_leftclick_tool_id);
 
@@ -262,9 +263,14 @@ bool AutoTrackRaymarine_pi::DeInit(void)
         wxPoint p = m_info_dialog->GetPosition();
         pConf->Write("PosX", p.x);
         pConf->Write("PosY", p.y);
+        delete m_info_dialog;
+        m_info_dialog = NULL;
     }
-    delete m_info_dialog;
-    m_info_dialog = NULL;
+
+    if (m_ErrorDialog) {
+      delete m_ErrorDialog;
+      m_ErrorDialog = NULL;
+    }
 
     preferences& p = m_prefs;
     pConf->Write("MaxAngle", p.max_angle);
