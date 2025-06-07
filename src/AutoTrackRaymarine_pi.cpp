@@ -35,7 +35,7 @@
 
 #define TURNRATE 20. // turnrate per second
 
-// Trying to build now with CI 2nd try
+// Trying to build now with CI 3nd try
 
 double heading_resolve(double degrees, double offset = 0)
 {
