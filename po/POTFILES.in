@@ -14,3 +14,4 @@ src/AutoTrackErrorUI.h
 src/Info.h
 src/icons.h
 src/ErrorDialog.h
+src/PreferencesDialog.h
