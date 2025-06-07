@@ -35,6 +35,8 @@
 
 #define TURNRATE 20. // turnrate per second
 
+// Trying to build now with CI
+
 double heading_resolve(double degrees, double offset = 0)
 {
     while (degrees < offset - 180)
